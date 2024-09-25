@@ -259,7 +259,7 @@ public class UIComputadora {
                 boolean agregar = true;
                 for (Componente c : listaComponentes) {
                     if (c.getNroSerie().toString().compareTo(nroSerie) == 0) {
-                        JOptionPane.showMessageDialog(pComputadoras, "Este componente ya se encuentra agregado a la computadora.", "Componente existente", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(pComputadoras, "Este componente ya se encuentra agregado a la computadora.");
                         agregar = false;
                         break;
                     }
@@ -276,7 +276,7 @@ public class UIComputadora {
                     txtNroSerie.setText("");
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(pComputadoras, "Error al agregar componente: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(pComputadoras, "Error al agregar componente: " + e.getMessage());
             }
         }
     }

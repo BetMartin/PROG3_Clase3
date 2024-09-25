@@ -4,6 +4,7 @@ import Ejercicio1_SQL.Modelo.Computadora;
 import Ejercicio1_SQL.Persistencia.Conexion;
 import Ejercicio1_SQL.Persistencia.SentenciasSQL;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -84,6 +85,7 @@ public class GestorComputadora extends Conexion implements SentenciasSQL {
     }
 
     public void agregarComputadora(Computadora computadora) throws Exception {
+        Connection cx = null;
         try{
             List<Computadora> listaComputadoras = obtenerComputadoras();
             boolean codigoExistente = false;
@@ -96,16 +98,19 @@ public class GestorComputadora extends Conexion implements SentenciasSQL {
             if(codigoExistente) {
                 throw new Exception("La computadora ya existe en el sistema");
             }else {
-                sentencia = estableceConexion().prepareStatement(INSERT_COMPUTADORA);
+                cx = estableceConexion();
+                cx.setAutoCommit(false);
+                sentencia = cx.prepareStatement(INSERT_COMPUTADORA);
                 Object[] params = {computadora.getId(), computadora.getCodigo(), computadora.getMarca(), computadora.getModelo()};
                 for (int i = 0; i < params.length; i++) {
                     sentencia.setObject(i + 1, params[i]);
                 }
                 sentencia.executeUpdate();
-                estableceConexion().commit();
+                cx.commit();
             }
         }catch (SQLException ex) {
-            estableceConexion().rollback();
+            if(cx != null)
+                cx.rollback();
             throw ex;
         }finally {
             if (sentencia != null) sentencia.close();
