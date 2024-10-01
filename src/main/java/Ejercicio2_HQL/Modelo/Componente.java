@@ -5,6 +5,7 @@ import javax.persistence.*;
 @Entity
 public class Componente extends EntityBeans implements java.io.Serializable{
     private String nombre;
+    @Column(unique = true)
     private String nroSerie;
     @ManyToOne
     @JoinColumn(name = "idComputadora")

@@ -1,11 +1,10 @@
 package Ejercicio2_HQL.Modelo;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 @Entity
 public class Computadora extends EntityBeans implements java.io.Serializable{
+    @Column(unique = true)
     private String codigo;
     private String marca;
     private String modelo;

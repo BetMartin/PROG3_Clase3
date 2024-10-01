@@ -1,7 +1,11 @@
 package Ejercicio2_HQL.Vista;
 
-import Ejercicio2_HQL.Controladores.*;
+import Ejercicio2_HQL.Vista.UIComponente;
 import Ejercicio2_HQL.Modelo.*;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -9,17 +13,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UIComputadora {
-    private JPanel pComputadoras;
-    private JLabel letCodigo;
+    private JPanel pComputerPanel;
     private JLabel letMarca;
     private JLabel letModelo;
     private JLabel letComponentes;
     private JLabel letNombre;
     private JLabel letNroSerie;
-    private JButton btnBuscar;
     private JTextField txtMarca;
     private JTextField txtModelo;
     private JTextField txtNombre;
@@ -27,70 +30,51 @@ public class UIComputadora {
     private JButton btnAgregar;
     private JButton btnQuitar;
     private JButton btnGuardar;
-    private JButton btnlimpiar;
-    private JButton btnEliminar;
     private JTable tableComponentes;
     private JTextField txtCodigo;
     private DefaultTableModel tableModel;
-    private GestorComputadora gestorComputadora;
-    private GestorComponente gestorComponente;
 
     public UIComputadora() throws SQLException {
-        // Inicializar controladores
-        gestorComputadora = new GestorComputadora();
-        gestorComponente = new GestorComponente();
-
-        // Inicializar componentes
         createUIComponents();
         setupListeners();
     }
 
     private void createUIComponents() {
         // Agregar los componentes al panel
-        pComputadoras = new JPanel();
-        pComputadoras.setLayout(new GridBagLayout());
+        pComputerPanel = new JPanel();
+        pComputerPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
 
         //Etiqueta y campo código
-        letCodigo = new JLabel("Código:");
+        JLabel letCodigo = new JLabel("Código:");
         gbc.gridx = 1;
         gbc.gridy = 0;
         letCodigo.setHorizontalAlignment(SwingConstants.RIGHT);
-        pComputadoras.add(letCodigo, gbc);
+        pComputerPanel.add(letCodigo, gbc);
 
         // ComboBox para códigos
         txtCodigo = new JTextField(15);
         gbc.gridx = 2;
+        gbc.gridy = 0;
         gbc.gridwidth = 4;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        pComputadoras.add(txtCodigo, gbc);
+        pComputerPanel.add(txtCodigo, gbc);
 
-
-        // Botón buscar
-        btnBuscar = new JButton("Buscar");
-        gbc.gridx = 6;
-        gbc.gridwidth = 1;
-        pComputadoras.add(btnBuscar, gbc);
-
-        // Botón limpiar
-        btnlimpiar = new JButton("Limpiar");
-        gbc.gridx = 7;
-        gbc.gridwidth = 1;
-        pComputadoras.add(btnlimpiar, gbc);
 
         // Etiqueta y campo de marca
         letMarca = new JLabel("Marca:");
         gbc.gridx = 1;
         gbc.gridy = 1;
+        gbc.gridwidth = 1;
         letMarca.setHorizontalAlignment(SwingConstants.RIGHT);
-        pComputadoras.add(letMarca, gbc);
+        pComputerPanel.add(letMarca, gbc);
 
         txtMarca = new JTextField(15);
         gbc.gridx = 2;
         gbc.gridwidth = 4;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        pComputadoras.add(txtMarca, gbc);
+        pComputerPanel.add(txtMarca, gbc);
 
         // Etiqueta y campo de modelo
         letModelo = new JLabel("Modelo:");
@@ -98,12 +82,12 @@ public class UIComputadora {
         gbc.gridy = 2;
         gbc.gridwidth = 1;
         letModelo.setHorizontalAlignment(SwingConstants.RIGHT);
-        pComputadoras.add(letModelo, gbc);
+        pComputerPanel.add(letModelo, gbc);
 
         txtModelo = new JTextField(15);
         gbc.gridx = 2;
         gbc.gridwidth = 4;
-        pComputadoras.add(txtModelo, gbc);
+        pComputerPanel.add(txtModelo, gbc);
 
         // Etiqueta y campo de Componente
         letComponentes = new JLabel("Componentes:");
@@ -111,42 +95,42 @@ public class UIComputadora {
         gbc.gridy = 3;
         gbc.gridwidth = 1;
         letComponentes.setHorizontalAlignment(SwingConstants.RIGHT);
-        pComputadoras.add(letComponentes, gbc);
+        pComputerPanel.add(letComponentes, gbc);
 
         // Etiqueta y campo de nombre
         letNombre = new JLabel("Nombre:");
         gbc.gridx = 2;
         gbc.gridy = 4;
         gbc.gridwidth = 1;
-        pComputadoras.add(letNombre, gbc);
+        pComputerPanel.add(letNombre, gbc);
 
         txtNombre = new JTextField(15);
         gbc.gridx = 3;
-        pComputadoras.add(txtNombre, gbc);
+        pComputerPanel.add(txtNombre, gbc);
 
         // Etiqueta y campo de número de serie
         letNroSerie = new JLabel("Nro Serie:");
         gbc.gridx = 4;
         gbc.gridy = 4;
-        pComputadoras.add(letNroSerie, gbc);
+        pComputerPanel.add(letNroSerie, gbc);
 
         txtNroSerie = new JTextField(15);
         gbc.gridx = 5;
-        pComputadoras.add(txtNroSerie, gbc);
+        pComputerPanel.add(txtNroSerie, gbc);
 
         // Botones para agregar y quitar componentes
         btnAgregar = new JButton("Agregar Componente");
         gbc.gridy = 5;
         gbc.gridx = 2;
         gbc.gridwidth = 2;
-        pComputadoras.add(btnAgregar, gbc);
+        pComputerPanel.add(btnAgregar, gbc);
 
         btnQuitar = new JButton("Quitar Componente");
         gbc.gridx = 4;
         gbc.gridwidth = 2;
-        pComputadoras.add(btnQuitar, gbc);
+        pComputerPanel.add(btnQuitar, gbc);
 
-        // Tabla para mostrar componentes
+        // Tabla  componentes
         String[] columnNames = {"Nombre", "Nro Serie"};
         tableModel = new DefaultTableModel(columnNames, 0);
         tableComponentes = new JTable(tableModel);
@@ -155,40 +139,38 @@ public class UIComputadora {
         gbc.gridy = 6;
         gbc.gridwidth = 4;
         gbc.fill = GridBagConstraints.BOTH;
-        pComputadoras.add(scrollPane, gbc);
+        pComputerPanel.add(scrollPane, gbc);
 
-        // Botones para guardar y eliminar
         btnGuardar = new JButton("Guardar");
         btnGuardar.setPreferredSize(new Dimension(100, 30));
         gbc.gridx = 1;
         gbc.gridy = 7;
-        gbc.gridwidth = 3;
-        pComputadoras.add(btnGuardar, gbc);
+        gbc.gridwidth = 5;
+        pComputerPanel.add(btnGuardar, gbc);
 
-        btnEliminar = new JButton("Eliminar");
-        gbc.gridx = 4;
-        gbc.gridwidth = 3;
-        pComputadoras.add(btnEliminar, gbc);
     }
 
     private void setupListeners() {
-        btnBuscar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                buscarComputadora();
-            }
-        });
-        btnlimpiar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                limpiarCampos();
-            }
-        });
-
         btnAgregar.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
-                agregarComponente();
+                UIComponente dialogoComponente = new UIComponente((Frame) SwingUtilities.getWindowAncestor(pComputerPanel));
+                dialogoComponente.setVisible(true);
+                Componente componente = dialogoComponente.getComponente();
+                boolean numeroSerieDuplicado = false;
+                if (dialogoComponente.isAgregado()) {
+                    for (int i = 0; i < tableModel.getRowCount(); i++) {
+                        String nroSerieTabla = tableModel.getValueAt(i, 1).toString();
+                        if (componente.getNroSerie().equals(nroSerieTabla)) {
+                            numeroSerieDuplicado = true;
+                            break;
+                        }
+                    }
+                    if (!numeroSerieDuplicado) {
+                        tableModel.addRow(new Object[]{componente.getNombre(), componente.getNroSerie()});
+                    } else {
+                        JOptionPane.showMessageDialog(pComputerPanel, "El número de serie ya ha sido agregado.", "Número de serie Existente", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
             }
         });
 
@@ -205,78 +187,46 @@ public class UIComputadora {
                 guardarDatos();
             }
         });
-
-        btnEliminar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                eliminarDatos();
-            }
-        });
     }
 
-    private void buscarComputadora() {
-        String codigo = txtCodigo.getText();
-        try {
-            Computadora computadora = gestorComputadora.obtenerComputadora(codigo);
-            if (computadora != null) {
-                Long idComputadora = computadora.getId();
-                txtMarca.setText(computadora.getMarca());
-                txtModelo.setText(computadora.getModelo());
-                List<Componente> componentes = gestorComputadora.obtenerComponentes(idComputadora);
-                cargarComponentes(componentes);
+    private void guardarDatos() {
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
 
-            } else {
-                JOptionPane.showMessageDialog(pComputadoras, "No se encontró una computadora con el código proporcionado.");
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(pComputadoras, "Error al buscar computadora: " + e.getMessage());
-        }
-    }
+        String codigo = txtCodigo.getText().trim();
+        String marca = txtMarca.getText().trim();
+        String modelo = txtModelo.getText().trim();
 
-    private void cargarComponentes(List<Componente> componentes) {
-        tableModel.setRowCount(0);
-        for (Componente componente : componentes) {
-            tableModel.addRow(new Object[]{componente.getNombre(), componente.getNroSerie()});
-        }
-    }
-
-    private void agregarComponente() {
-        String nombre = txtNombre.getText().trim();
-        String nroSerie = txtNroSerie.getText().trim();
-        String codigoComputadora = txtCodigo.getText().trim();
-
-        if (nombre.isEmpty() || nroSerie.isEmpty()) {
-            JOptionPane.showMessageDialog(pComputadoras, "Por favor, complete los campos de Nombre y Nro Serie.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
-            return;
-        } else{
+        if (codigo.isEmpty() || marca.isEmpty() || modelo.isEmpty()|| tableModel.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(pComputerPanel, "Por favor, complete todos los campos antes de guardar.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
+        }else{
             try {
-                Computadora computadoraAsociada = gestorComputadora.obtenerComputadora(codigoComputadora);
-                if (computadoraAsociada == null) {
-                    guardarDatos();
-                    computadoraAsociada = gestorComputadora.obtenerComputadora(codigoComputadora);
+                Computadora computadora = new Computadora();
+                computadora.setCodigo(codigo);
+                computadora.setMarca(marca);
+                computadora.setModelo(modelo);
+
+                List<Componente> listaComponentes = new ArrayList<>();
+                for (int i = 0; i<tableModel.getRowCount(); i++) {
+                    Componente componenteAgregado = new Componente();
+                    componenteAgregado.setNombre(tableModel.getValueAt(i, 0).toString());
+                    componenteAgregado.setNroSerie(tableModel.getValueAt(i, 1).toString());
+                    componenteAgregado.setComputadora(computadora);
+                    listaComponentes.add(componenteAgregado);
                 }
-                List<Componente> listaComponentes=gestorComputadora.obtenerComponentes(computadoraAsociada.getId());
-                boolean agregar = true;
-                for (Componente c : listaComponentes) {
-                    if (c.getNroSerie().toString().compareTo(nroSerie) == 0) {
-                        JOptionPane.showMessageDialog(pComputadoras, "Este componente ya se encuentra agregado a la computadora.");
-                        agregar = false;
-                        break;
-                    }
-                }
-                if(agregar) {
-                    Componente nuevoComponente = new Componente();
-                    nuevoComponente.setNombre(nombre);
-                    nuevoComponente.setNroSerie(nroSerie);
-                    nuevoComponente.setComputadora(computadoraAsociada);
-                    gestorComponente.agregarComponente(nuevoComponente);
-                    tableModel.addRow(new Object[]{nombre, nroSerie});
-                    JOptionPane.showMessageDialog(pComputadoras, "Componente agregado correctamente.");
-                    txtNombre.setText("");
-                    txtNroSerie.setText("");
-                }
+                computadora.setComponentes(listaComponentes);
+
+                session.save(computadora);
+                transaction.commit();
+
+                JOptionPane.showMessageDialog(pComputerPanel, "Datos guardados correctamente.");
+                limpiarCampos();
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(pComputadoras, "Error al agregar componente: " + e.getMessage());
+                transaction.rollback();
+                JOptionPane.showMessageDialog(pComputerPanel, "Error al guardar datos: " + e.getMessage());
+            } finally {
+                session.close();
             }
         }
     }
@@ -284,58 +234,10 @@ public class UIComputadora {
     private void quitarComponente() {
         int selectedRow = tableComponentes.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(pComputadoras, "Por favor, seleccione un componente para quitar.", "Seleccionar Componente", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(pComputerPanel, "Por favor, seleccione un componente para quitar.", "Seleccionar Componente", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        String nroSerie = (String) tableModel.getValueAt(selectedRow, 1);
-        try {
-            Componente componenteAEliminar = gestorComponente.obtenerComponente(nroSerie);
-            if (componenteAEliminar != null) {
-                gestorComponente.borrarComponente(componenteAEliminar.getId().toString());
-                tableModel.removeRow(selectedRow);
-                JOptionPane.showMessageDialog(pComputadoras, "Componente eliminado correctamente.");
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(pComputadoras, "Error al quitar componente: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-
-    private void guardarDatos() {
-        String codigo = txtCodigo.getText().trim();
-        String marca = txtMarca.getText().trim();
-        String modelo = txtModelo.getText().trim();
-        String nombre = txtNombre.getText().trim();
-        String nroSerie = txtNroSerie.getText().trim();
-        if (codigo.isEmpty() || marca.isEmpty() || modelo.isEmpty()) {
-            JOptionPane.showMessageDialog(pComputadoras, "Por favor, complete todos los campos (Código, Marca, Modelo) antes de guardar.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
-        } else {
-            try {
-                Computadora computadora = new Computadora();
-                computadora.setCodigo(codigo);
-                computadora.setMarca(marca);
-                computadora.setModelo(modelo);
-                gestorComputadora.agregarComputadora(computadora);
-                if(!nombre.isEmpty() || !nroSerie.isEmpty()) {
-                    agregarComponente();
-                }
-                JOptionPane.showMessageDialog(pComputadoras, "Datos guardados correctamente.");
-                limpiarCampos();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(pComputadoras, "Error al guardar datos: " + e.getMessage());
-            }
-        }
-    }
-
-    private void eliminarDatos() {
-        String codigo = txtCodigo.getText();
-        try {
-            gestorComputadora.borrarComputadora(codigo);
-            limpiarCampos();
-            JOptionPane.showMessageDialog(pComputadoras, "Datos eliminados correctamente.");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(pComputadoras, "Error al eliminar datos: " + e.getMessage());
-        }
+        tableModel.removeRow(selectedRow);
     }
 
     private void limpiarCampos() {
@@ -350,7 +252,7 @@ public class UIComputadora {
     public static void createAndShowUI() throws SQLException {
         JFrame frame = new JFrame("Gestión de Computadoras");
         UIComputadora ui = new UIComputadora();
-        frame.setContentPane(ui.pComputadoras);
+        frame.setContentPane(ui.pComputerPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);

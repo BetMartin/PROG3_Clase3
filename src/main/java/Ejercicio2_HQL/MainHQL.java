@@ -2,6 +2,10 @@ package Ejercicio2_HQL;
 
 import Ejercicio1_SQL.Persistencia.Conexion;
 import Ejercicio1_SQL.Vista.UIComputadora;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 
 import javax.swing.*;
 import java.sql.SQLException;
@@ -16,6 +20,7 @@ public class MainHQL {
                 public void run() {
                     try {
                         UIComputadora.createAndShowUI();
+
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }

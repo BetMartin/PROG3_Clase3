@@ -11,6 +11,7 @@ public abstract class EntityBeans implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
+
     //Metdoos setter y getter
     public Long getId() {
         return id;

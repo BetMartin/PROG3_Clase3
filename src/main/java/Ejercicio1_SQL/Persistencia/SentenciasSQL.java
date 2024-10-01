@@ -16,16 +16,10 @@ public interface SentenciasSQL {
             "FOREIGN KEY (idComputadora) REFERENCES Computadora(id)" +
             ")";
 
-    //Sentencias Parar Computadora
-    String INSERT_COMPUTADORA = "INSERT INTO `Computadoras`.`Computadora` (id, codigo, marca, modelo) VALUES (?, ?, ?, ?)";
-    String DELETE_COMPUTADORA = "DELETE FROM `Computadoras`.`Computadora` WHERE id=?";
-    String SELECT_COMPUTADORA = "SELECT * FROM `Computadoras`.`Computadora` WHERE codigo=?";
+    //Sentencias Para ingresar registros
+    String INSERT_COMPUTADORA = "INSERT INTO `Computadoras`.`Computadora` (codigo, marca, modelo) VALUES (?, ?, ?)";
     String SELECT_ALL_COMPUTADORAS = "SELECT * FROM `Computadoras`.`Computadora`";
 
-    //Sentencias Para Componente
-    String INSERT_COMPONENTE = "INSERT INTO `Computadoras`.`Componente` (id, nombre, nroSerie, idComputadora) VALUES (?, ?, ?, ?)";
-    String DELETE_COMPONENTE = "DELETE FROM `Computadoras`.`Componente` WHERE id=?";
-    String DELETE_COMPONENTE_COMPUTADORA = "DELETE FROM `Computadoras`.`Componente` WHERE idComputadora=?";
-    String SELECT_COMPONENTES = "SELECT * FROM `Computadoras`.`Componente`WHERE idComputadora=?";
-    String SELECT_COMPONENTE = "SELECT * FROM `Computadoras`.`Componente`WHERE nroSerie=?";
+    String INSERT_COMPONENTE = "INSERT INTO `Computadoras`.`Componente` (nombre, nroSerie, idComputadora) VALUES (?, ?, ?)";
+
 }

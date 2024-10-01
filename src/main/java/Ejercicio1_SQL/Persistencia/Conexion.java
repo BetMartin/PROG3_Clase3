@@ -28,9 +28,7 @@ public class Conexion implements SentenciasSQL{
 
     private void crearTablas() throws SQLException {
         try (Statement stmt = conexion.createStatement()) {
-            // Crear tabla Computadora si no existe
             stmt.executeUpdate(CREATE_TABLE_COMPUTADORA);
-            // Crear tabla Componente si no existe
             stmt.executeUpdate(CREATE_TABLE_COMPONENTE);
         } catch (SQLException e) {
             throw new SQLException("Error al crear la base de datos o tablas: " + e.getMessage());
